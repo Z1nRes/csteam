@@ -9,6 +9,11 @@ use yii\web\Response;
 use yii\filters\VerbFilter;
 use app\models\LoginForm;
 use app\models\ContactForm;
+use app\models\Note;
+use yii\web\UploadedFile;
+use app\models\SignupForm;
+use app\models\User;
+
 
 class SiteController extends Controller
 {
@@ -86,6 +91,31 @@ class SiteController extends Controller
         ]);
     }
 
+/**
+     * Signup action.
+     *
+     * @return Response|string
+     */
+
+    public function actionSignup()
+    {
+        
+        if (!Yii::$app->user->isGuest) {
+            return $this->goHome();
+        }
+        
+
+        $model = new SignupForm();
+        if ($model->load(Yii::$app->request->post()) && $model->signup()) {
+            if(true){
+                return $this->redirect(['site/login']);
+            }
+        } 
+
+        return $this->render('signup', [
+            'model' => $model,
+        ]);
+    }
     /**
      * Logout action.
      *
@@ -99,30 +129,74 @@ class SiteController extends Controller
     }
 
     /**
-     * Displays contact page.
-     *
-     * @return Response|string
-     */
-    public function actionContact()
-    {
-        $model = new ContactForm();
-        if ($model->load(Yii::$app->request->post()) && $model->contact(Yii::$app->params['adminEmail'])) {
-            Yii::$app->session->setFlash('contactFormSubmitted');
-
-            return $this->refresh();
-        }
-        return $this->render('contact', [
-            'model' => $model,
-        ]);
-    }
-
-    /**
      * Displays about page.
      *
      * @return string
      */
-    public function actionAbout()
+    public function actionMapNote()
     {
-        return $this->render('about');
+        $model = new Note();
+        $id_user = Yii::$app->user->identity->id;
+        $notes = Note::find()->where(['id_user' => $id_user])->all();
+        $last_note = Note::find()->max('id');
+
+        if (Yii::$app->request->isPost && $model->load(Yii::$app->request->post())) {
+            if ($model->validate()) {
+                $photos = '';
+                if(UploadedFile::getInstances($model, 'photos') != NULL){
+                    foreach(UploadedFile::getInstances($model, 'photos') as $photo){
+                        $photo->saveAs("uploads/{$photo->fullPath}");
+                        $photos .= "{$photo->fullPath}\n";
+                    }
+                }
+                $model->photos = substr($photos, 0, -1);
+                
+                $model->save(false);
+
+                return $this->refresh();
+            }
+        } else {
+            $model->loadDefaultValues();
+        }
+
+        return $this->render('map-note', [
+            'model' => $model,
+            'notes' => $notes,
+            'id_user' => $id_user,
+            'last_note' => $last_note,
+        ]);
+    }
+
+    public function actionNote($id)
+    {
+        $note = Note::findOne($id);
+
+        return $this->render('note', [
+            'note' => $note,
+        ]);
+    }
+
+
+    public function actionUpdateNote($id){
+        $note = Note::findOne($id);
+
+        if ($this->request->isPost && $note->load($this->request->post())) {
+            
+
+            $note->save();
+
+            return $this->redirect(['note', 'id' => $note->id]);
+        }
+
+        return $this->render('update-note', [
+            'note' => $note,
+        ]);
+    }
+
+    public function actionDeleteNote($id){
+        $note = Note::findOne($id);
+        $note->delete();
+
+        return $this->redirect(['site/map-note']);
     }
 }
