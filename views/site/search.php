@@ -24,7 +24,7 @@ $this->params['breadcrumbs'][] = $this->title;
             <p><?= $res->description ?></p>
         <?php } 
     } else { ?>
-        <h2>Поиск ничего не выдал</h2>
+        <h2><?= $message ?></h2>
     <?php } ?>
 
 </div>

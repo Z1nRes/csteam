@@ -179,14 +179,19 @@ class SiteController extends Controller
     {
         $q = new SearchForm();
         $qRes = null;
+        $message = '';
 
         if (Yii::$app->request->isPost && $q->load(Yii::$app->request->post()) && $q->validate()) {
             $qRes = Note::find()->where(['title' => $q])->all();
+            if ($qRes == null) {
+                $message = 'Поиск ничего не выдал';
+            }
         } 
 
         return $this->render('search', [
             'q' => $q,
             'qRes' => $qRes,
+            'message' => $message
         ]);
     }
 
