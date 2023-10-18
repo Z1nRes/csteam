@@ -220,6 +220,6 @@ class SiteController extends Controller
         $note = Note::findOne($id);
         $note->delete();
 
-        return $this->redirect(['site/map-note']);
+        return $this->redirect(['site/map-note?id_map=' . $note->id_map]);
     }
 }
