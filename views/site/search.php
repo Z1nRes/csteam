@@ -18,10 +18,13 @@ $this->params['breadcrumbs'][] = $this->title;
 
 <div class="mt-4">
     <?php 
-    if ($qRes !== null) {
+    if (!empty($qRes)) {
         foreach ($qRes as $res) { ?>
             <h2><a href="note?id=<?= $res->id ?>"><?= $res->title ?> (id=<?= $res->id ?>)</a></h2>
             <p><?= $res->description ?></p>
         <?php } 
-    } ?>
+    } else { ?>
+        <h2>Поиск ничего не выдал</h2>
+    <?php } ?>
+
 </div>

@@ -182,11 +182,11 @@ class SiteController extends Controller
 
         if (Yii::$app->request->isPost && $q->load(Yii::$app->request->post()) && $q->validate()) {
             $qRes = Note::find()->where(['title' => $q])->all();
-        }
+        } 
 
         return $this->render('search', [
             'q' => $q,
-            'qRes' => $qRes
+            'qRes' => $qRes,
         ]);
     }
 
