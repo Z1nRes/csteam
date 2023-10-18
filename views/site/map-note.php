@@ -11,15 +11,18 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 
 <div class="site-map-note d-flex flex-row mt-5" oncontextmenu="return false;">
-    <div class="map-card" id="map">
-        <img class="map-card-img" src="https://uploads-ssl.webflow.com/5d5ab0de3f2789196e87264e/5f9999ea1057522149823f0a_de_dust2_radar_Pano0Pat1Buy1Spec0.png" alt="de_dust 2">
-        <?php
-            foreach ($notes as $pin) {
-                echo '<a href="note?id=' . $pin->id . '" >' . 
-                '<?xml version="1.0" ?><svg style="cursor: pointer; position: absolute; top: ' . $pin->pin_top . '; left: ' . $pin->pin_left . '; width: 25px; height: 30px">' . 'viewBox="0 0 22 30" xmlns="http://www.w3.org/2000/svg"><title/><g data-name="Layer 2" id="Layer_2"><g id="Interface-Solid"><path d="M11,0A11.01245,11.01245,0,0,0,0,11C0,21.36133,9.95166,29.44238,10.37549,29.78125a1.00083,1.00083,0,0,0,1.249,0C12.04834,29.44238,22,21.36133,22,11A11.01245,11.01245,0,0,0,11,0Z" id="interface-solid-pin-2"/></g></g></svg>' .
-                '</a>';
-            }
-        ?>
+    <div>
+        <div class="map-card" id="map">
+            <img class="map-card-img" src="<?= $map[0]->photo ?>" alt="<?= $map[0]->name ?>">
+            <?php
+                foreach ($notes as $pin) {
+                    echo '<a href="note?id=' . $pin->id . '" >' . 
+                    '<?xml version="1.0" ?><svg style="cursor: pointer; position: absolute; top: ' . $pin->pin_top . '; left: ' . $pin->pin_left . '; width: 25px; height: 30px">' . 'viewBox="0 0 22 30" xmlns="http://www.w3.org/2000/svg"><title/><g data-name="Layer 2" id="Layer_2"><g id="Interface-Solid"><path d="M11,0A11.01245,11.01245,0,0,0,0,11C0,21.36133,9.95166,29.44238,10.37549,29.78125a1.00083,1.00083,0,0,0,1.249,0C12.04834,29.44238,22,21.36133,22,11A11.01245,11.01245,0,0,0,11,0Z" id="interface-solid-pin-2"/></g></g></svg>' .
+                    '</a>';
+                }
+            ?>
+        </div>
+        
     </div>
 
     <div class="ms-5">
@@ -27,6 +30,7 @@ $this->params['breadcrumbs'][] = $this->title;
         <?php $form = ActiveForm::begin(['options'=>['enctype'=>'multipart/form-data', 'id' => 'form']]); ?>
 
         <?= $form->field($model, 'id_user')->hiddenInput(['value' => $id_user])->label(false) ?>
+        <?= $form->field($model, 'id_map')->hiddenInput(['value' => $map[0]->id])->label(false) ?>
         <?= $form->field($model, 'pin_top')->hiddenInput()->label(false) ?>
         <?= $form->field($model, 'pin_left')->hiddenInput()->label(false) ?>
 

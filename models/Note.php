@@ -34,8 +34,9 @@ class Note extends \yii\db\ActiveRecord
     {
         return [
             [['title', 'description'], 'required'],
-            [['id_user'], 'integer'],
+            [['id_user', 'id_map'], 'integer'],
             [['id_user'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['id_user' => 'id']],
+            [['id_map'], 'exist', 'skipOnError' => true, 'targetClass' => Map::class, 'targetAttribute' => ['id_map' => 'id']],
             [['title'], 'required', 'message' => 'Введите заголовок.'],
             [['description'], 'required', 'message' => 'Введите описание.'],
             [['title', 'description', 'links'], 'string', 'max' => 255],
@@ -53,6 +54,7 @@ class Note extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'id_user' => 'Id_user',
+            'id_map' => 'Id Map',
             'title' => 'Заголовок',
             'description' => 'Описание',
             'links' => 'Ссылки',
@@ -82,9 +84,14 @@ class Note extends \yii\db\ActiveRecord
         }
     }
 
+    public function getMap()
+    {
+        return $this->hasOne(Map::class, ['id' => 'id_map']);
+    }
+
     public function getOwner()
     {
-        return $this->hasOne(User::class, ['id_user' => 'id']);
+        return $this->hasOne(User::class, ['id' => 'id_user']);
     }
 
 }

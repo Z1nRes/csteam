@@ -56,6 +56,8 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
                     . '</li>',
             Yii::$app->user->isGuest
             ? ['label' => 'Регистрация', 'url' => ['/site/signup']] : '',
+            !Yii::$app->user->isGuest
+            ? ['label' => 'Поиск', 'url' => ['/site/search-page']] : '',
         ]
     ]);
     NavBar::end();

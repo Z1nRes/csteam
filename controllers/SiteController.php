@@ -13,6 +13,8 @@ use app\models\Note;
 use yii\web\UploadedFile;
 use app\models\SignupForm;
 use app\models\User;
+use app\models\Map;
+use app\models\SearchForm;
 
 
 class SiteController extends Controller
@@ -66,7 +68,11 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-        return $this->render('index');
+        $map = Map::find()->all();
+
+        return $this->render('index', [
+            'map' => $map,
+        ]);
     }
 
     /**
@@ -133,12 +139,13 @@ class SiteController extends Controller
      *
      * @return string
      */
-    public function actionMapNote()
+    public function actionMapNote($id_map)
     {
         $model = new Note();
         $id_user = Yii::$app->user->identity->id;
-        $notes = Note::find()->where(['id_user' => $id_user])->all();
+        $notes = Note::find()->where(['id_user' => $id_user, 'id_map' => $id_map])->all();
         $last_note = Note::find()->max('id');
+        $map = Map::find()->where(['id' => $id_map])->all();
 
         if (Yii::$app->request->isPost && $model->load(Yii::$app->request->post())) {
             if ($model->validate()) {
@@ -164,6 +171,22 @@ class SiteController extends Controller
             'notes' => $notes,
             'id_user' => $id_user,
             'last_note' => $last_note,
+            'map' => $map
+        ]);
+    }
+
+    public function actionSearchPage()
+    {
+        $q = new SearchForm();
+        $qRes = null;
+
+        if (Yii::$app->request->isPost && $q->load(Yii::$app->request->post()) && $q->validate()) {
+            $qRes = Note::find()->where(['title' => $q])->all();
+        }
+
+        return $this->render('search', [
+            'q' => $q,
+            'qRes' => $qRes
         ]);
     }
 
