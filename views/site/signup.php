@@ -17,12 +17,12 @@ $this->params['breadcrumbs'][] = $this->title;
         <h1><?= Html::encode($this->title) ?> </h1>
         <?php $form = ActiveForm::begin(); ?>
 
-            <?= $form->field($model, 'nickname', ['options' => ['class' => 'input input-text']]) ?>
+            <?= $form->field($model, 'email', ['options' => ['class' => 'input input-text']])->textInput(['placeholder' => 'email@gmail.com']) ?>
             <?= $form->field($model, 'login', ['options' => ['class' => 'input input-text']]) ?>
             <?= $form->field($model, 'password', ['options' => ['class' => 'input input-text']])->passwordInput() ?>
         
             <div class="form-group">
-                <?= Html::submitButton('Войти', ['class' => 'btn btn-primary btn-signup']) ?>
+                <?= Html::submitButton('Зарегистрироваться', ['class' => 'btn btn-primary btn-signup']) ?>
             </div>
         <?php ActiveForm::end(); ?>
 

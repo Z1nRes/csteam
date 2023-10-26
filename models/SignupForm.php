@@ -9,7 +9,7 @@ use yii\db\ActiveRecord;
 
 class SignupForm extends ActiveRecord
 {
-    public $nickname;
+    public $email;
     public $login;
     public $password;
 
@@ -21,21 +21,22 @@ class SignupForm extends ActiveRecord
     public function rules()
     {
         return [
-            // nickname, login and password are both required
-            [['nickname', 'login', 'password'], 'trim'],
-            [['nickname'], 'required', 'message' => 'Пожалуйста, введите никнейм.'],
+            // email, login and password are both required
+            [['email', 'login', 'password'], 'trim'],
+            [['email'], 'required', 'message' => 'Пожалуйста, введите почту.'],
             [['login'], 'required', 'message' => 'Пожалуйста, введите логин.'],
             [['password'], 'required', 'message' => 'Пожалуйста, введите пароль.'],
             [['login', 'password'], 'string', 'length' => [4, 20], 'tooShort' => 'Слишком короткий (<4 символов).', 'tooLong' => 'Слишком длинный (>20 символов).'],
             [['login'], 'unique', 'targetAttribute' => 'login', 'message' => 'Логин уже занят, попробуйте другой.'],
-            [['nickname'], 'string'],
+            [['email'], 'string'],
+            [['email'], 'email'],
         ];
     }
 
     public function attributeLabels()
     {
         return [
-            'nickname' => 'Ник',
+            'email' => 'Email',
             'login' => 'Логин',
             'password' => 'Пароль',
         ];
@@ -47,6 +48,7 @@ class SignupForm extends ActiveRecord
         {
             $user = new User();
             $user->attributes = $this->attributes;
+            $user->password = md5($this->password);
             $user->create();
             return true;
         } else {

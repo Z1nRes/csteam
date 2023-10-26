@@ -8,7 +8,7 @@ use Yii;
  * This is the model class for table "user".
  *
  * @property int $id
- * @property string $nickname
+ * @property string $email
  * @property string $login
  * @property string $password
  */
@@ -28,8 +28,8 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
     public function rules()
     {
         return [
-            [['nickname', 'login', 'password'], 'required'],
-            [['nickname', 'login', 'password'], 'string', 'max' => 255],
+            [['email', 'login', 'password'], 'required'],
+            [['email', 'login', 'password'], 'string', 'max' => 255],
         ];
     }
 
@@ -40,7 +40,7 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
     {
         return [
             'id' => 'ID',
-            'nickname' => 'Nickname',
+            'email' => 'email',
             'login' => 'Login',
             'password' => 'Password',
         ];
@@ -48,7 +48,7 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
 
     public function validatePassword($password)
     {
-        return $this->password == $password;
+        return $this->password == md5($password);
     }
 
     public static function findIdentity($id)
